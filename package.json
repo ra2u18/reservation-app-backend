@@ -1,0 +1,17 @@
+{
+  "name": "reservation-app-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ra2u18/reservation-app-backend.git",
+  "author": "riccardo andronache <dev.riccardo.a@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.14.2",
+    "aws-cdk": "^2.66.1",
+    "aws-cdk-lib": "^2.66.1",
+    "constructs": "^10.1.263",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^3.14.2",
+    "typescript": "^4.9.5"
+  }
+}
