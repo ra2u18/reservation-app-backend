@@ -1,4 +1,9 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyEventQueryStringParameters,
+  APIGatewayProxyResult,
+  Context,
+} from 'aws-lambda';
 
 import { DynamoDB, ScanCommand, ScanCommandOutput } from '@aws-sdk/client-dynamodb';
 
@@ -15,33 +20,62 @@ async function handler(
     body: 'Hello from DynamoDB',
   };
 
-  let queryResponse: ScanCommandOutput;
-
   try {
     if (!event.queryStringParameters) {
-      queryResponse = await dbClient.send(new ScanCommand({ TableName: TABLE_NAME }));
-      result.body = JSON.stringify(queryResponse);
+      result.body = await scanAllTable();
       return result;
     }
 
     if (PRIMARY_KEY! in event.queryStringParameters) {
-      const keyValue = event.queryStringParameters[PRIMARY_KEY!] as string;
-      queryResponse = await dbClient.send(
-        new ScanCommand({
-          TableName: TABLE_NAME,
-          FilterExpression: '#a = :a',
-          ExpressionAttributeNames: { '#a': PRIMARY_KEY! },
-          ExpressionAttributeValues: { ':a': { S: keyValue } },
-        })
-      );
-
-      result.body = JSON.stringify(queryResponse);
+      result.body = await scanWithPrimaryPartition(event.queryStringParameters);
+    } else {
+      result.body = await scanWithSecondaryPartition(event.queryStringParameters);
     }
   } catch (err: any) {
     result.body = err.message;
   }
 
   return result;
+}
+
+async function scanAllTable() {
+  const queryResponse = await dbClient.send(new ScanCommand({ TableName: TABLE_NAME }));
+  return JSON.stringify(queryResponse);
+}
+
+async function scanWithPrimaryPartition(
+  queryParams: APIGatewayProxyEventQueryStringParameters
+) {
+  const keyValue = queryParams[PRIMARY_KEY!] as string;
+  const queryResponse = await dbClient.send(
+    new ScanCommand({
+      TableName: TABLE_NAME,
+      FilterExpression: '#a = :a',
+      ExpressionAttributeNames: { '#a': PRIMARY_KEY! },
+      ExpressionAttributeValues: { ':a': { S: keyValue } },
+    })
+  );
+
+  return JSON.stringify(queryResponse);
+}
+
+async function scanWithSecondaryPartition(
+  queryParams: APIGatewayProxyEventQueryStringParameters
+) {
+  const queryKey = Object.keys(queryParams)[0];
+  const queryValue = queryParams[queryKey] as string;
+
+  const queryResponse = await dbClient.send(
+    new ScanCommand({
+      TableName: TABLE_NAME,
+      IndexName: queryKey,
+      FilterExpression: '#a = :a',
+      ExpressionAttributeNames: { '#a': queryKey },
+      ExpressionAttributeValues: { ':a': { S: queryValue } },
+    })
+  );
+
+  return JSON.stringify(queryResponse);
 }
 
 export { handler };
