@@ -5,6 +5,7 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 
 import { v4 } from 'uuid';
 
+const TABLE_NAME = process.env.TABLE_NAME;
 const dbClient = new DynamoDB({ region: 'eu-west-1' });
 
 async function handler(
@@ -21,7 +22,7 @@ async function handler(
 
   try {
     const command = new PutItemCommand({
-      TableName: 'SpacesTable',
+      TableName: TABLE_NAME!,
       Item: marshall(item),
     });
 
