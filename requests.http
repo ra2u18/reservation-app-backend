@@ -9,6 +9,14 @@ Content-Type: application/json
 }
 ###
 
+PUT {{endpoint}}/spaces?spaceId=590bd5d0-2be9-4966-a7d3-3b24f9f810e0
+Content-Type: application/json
+
+{
+    "location": "Updated Location",
+}
+###
+
 GET {{endpoint}}/spaces?spaceId=590bd5d0-2be9-4966-a7d3-3b24f9f810e0
 ###
 
