@@ -15,19 +15,19 @@ export class SpaceStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
 
-    const helloLambdaNodejs = new NodejsFunction(this, 'helloLambdaNodejs', {
-      entry: join(__dirname, '..', 'services', 'node-lambda', 'hello.ts'),
+    const createItem = new NodejsFunction(this, 'createItem', {
+      entry: join(__dirname, '..', 'services', 'SpacesTable', 'Create.ts'),
       handler: 'handler',
     });
 
     const s3ListPolicy = new PolicyStatement();
-    s3ListPolicy.addActions('s3:ListAllMyBuckets');
-    s3ListPolicy.addResources('*');
+    s3ListPolicy.addActions('dynamodb:PutItem');
+    s3ListPolicy.addResources(this.spacesTable.getTableARN());
 
-    helloLambdaNodejs.addToRolePolicy(s3ListPolicy);
+    createItem.addToRolePolicy(s3ListPolicy);
 
     // Hello Api lambda integration
-    const helloLambdaIntegration = new LambdaIntegration(helloLambdaNodejs);
+    const helloLambdaIntegration = new LambdaIntegration(createItem);
     const helloLambdaResource = this.api.root.addResource('hello');
     helloLambdaResource.addMethod('GET', helloLambdaIntegration);
   }

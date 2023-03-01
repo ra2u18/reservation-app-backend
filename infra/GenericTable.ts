@@ -27,4 +27,8 @@ export class GenericTable {
       tableName: this.name,
     });
   }
+
+  getTableARN() {
+    return this.table.tableArn;
+  }
 }
