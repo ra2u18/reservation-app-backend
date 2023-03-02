@@ -23,7 +23,6 @@ Content-Type: application/json
 }
 ###
 
-
 DELETE {{endpoint}}/spaces?spaceId=590bd5d0-2be9-4966-a7d3-3b24f9f810e0
 
 

@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
-
 import { DynamoDB, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
+
+import { getEventBody } from '../Shared/Utils';
 
 const TABLE_NAME = process.env.TABLE_NAME as string;
 const PRIMARY_KEY = process.env.PRIMARY_KEY as string;
@@ -16,7 +17,7 @@ async function handler(
     body: 'Hello from DynamoDB',
   };
 
-  const requestBody = typeof event.body == 'object' ? event.body : JSON.parse(event.body);
+  const requestBody = getEventBody(event);
   const spaceId = event.queryStringParameters?.[PRIMARY_KEY] as string;
 
   if (!(requestBody && spaceId)) {

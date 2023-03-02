@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { handler } from '../../services/SpacesTable/Delete';
+import { handler } from '../../services/SpacesTable/Create';
 
 // const updateEvent: APIGatewayProxyEvent = {
 //   queryStringParameters: {
@@ -10,14 +10,21 @@ import { handler } from '../../services/SpacesTable/Delete';
 //   },
 // } as any;
 
-const deleteEvent: APIGatewayProxyEvent = {
-  queryStringParameters: {
-    spaceId: '701ef34a-f906-443f-b72d-99c743dd1ad9',
+// const deleteEvent: APIGatewayProxyEvent = {
+//   queryStringParameters: {
+//     spaceId: '701ef34a-f906-443f-b72d-99c743dd1ad9',
+//   },
+// } as any;
+
+const createEvent: APIGatewayProxyEvent = {
+  body: {
+    name: 'some name',
+    location: 'some location',
   },
 } as any;
 
 (async () => {
-  const result = await handler(deleteEvent as any, {} as any);
+  const result = await handler(createEvent as any, {} as any);
 
   console.log(result);
   console.log('here');
