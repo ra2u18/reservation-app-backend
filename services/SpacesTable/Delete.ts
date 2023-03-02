@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 
-import { DynamoDB, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
+import { DeleteItemCommand, DynamoDB } from '@aws-sdk/client-dynamodb';
 
 const TABLE_NAME = process.env.TABLE_NAME as string;
 const PRIMARY_KEY = process.env.PRIMARY_KEY as string;
@@ -16,31 +16,23 @@ async function handler(
     body: 'Hello from DynamoDB',
   };
 
-  const requestBody = typeof event.body == 'object' ? event.body : JSON.parse(event.body);
   const spaceId = event.queryStringParameters?.[PRIMARY_KEY] as string;
 
-  if (!(requestBody && spaceId)) {
-    result.body = 'No request body or space id found';
+  if (!spaceId) {
+    result.body = 'No id found';
     result.statusCode = 404;
     return result;
   }
 
-  const requestBodyKey = Object.keys(requestBody)[0];
-  const requestBodyValue = { S: requestBody[requestBodyKey] };
-
   const params = {
     TableName: TABLE_NAME,
     Key: { [PRIMARY_KEY]: { S: spaceId } },
-    UpdateExpression: 'set #zzzNew = :new',
-    ExpressionAttributeValues: { ':new': requestBodyValue },
-    ExpressionAttributeNames: { '#zzzNew': requestBodyKey },
-    ReturnValues: 'UPDATED_NEW',
   };
 
   try {
-    const updatedItem = await dbClient.send(new UpdateItemCommand(params));
+    const deleteItem = await dbClient.send(new DeleteItemCommand(params));
 
-    result.body = JSON.stringify(updatedItem);
+    result.body = JSON.stringify(deleteItem);
   } catch (err: any) {
     result.body = err.message;
   }

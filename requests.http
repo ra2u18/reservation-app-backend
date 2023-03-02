@@ -1,25 +1,29 @@
 @endpoint = https://frq5ywynzb.execute-api.eu-west-1.amazonaws.com/prod
 
-POST {{endpoint}}/spaces/
-Content-Type: application/json
-
-{
-    "location": "London",
-    "name": "Best Location"
-}
-###
-
-PUT {{endpoint}}/spaces?spaceId=590bd5d0-2be9-4966-a7d3-3b24f9f810e0
-Content-Type: application/json
-
-{
-    "location": "Updated Location",
-}
+GET {{endpoint}}/spaces
 ###
 
 GET {{endpoint}}/spaces?spaceId=590bd5d0-2be9-4966-a7d3-3b24f9f810e0
 ###
 
+POST {{endpoint}}/spaces/
+Content-Type: application/json
 
-GET {{endpoint}}/spaces?location=London
+{
+    "location": "London",
+    "name": "Sweet spot"
+}
 ###
+
+PUT {{endpoint}}/spaces?spaceId=da8c6737-76ab-4cdd-8a1c-318aa2f661e0
+Content-Type: application/json
+
+{
+    "location": "New Location",
+}
+###
+
+
+DELETE {{endpoint}}/spaces?spaceId=590bd5d0-2be9-4966-a7d3-3b24f9f810e0
+
+
