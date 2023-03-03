@@ -20,6 +20,7 @@
   "dependencies": {
     "@aws-amplify/auth": "^5.1.10",
     "@aws-sdk/client-dynamodb": "^3.281.0",
+    "@aws-sdk/credential-providers": "^3.282.0",
     "@aws-sdk/lib-dynamodb": "^3.282.0",
     "@aws-sdk/util-dynamodb": "^3.281.0",
     "aws-amplify": "^5.0.16",
