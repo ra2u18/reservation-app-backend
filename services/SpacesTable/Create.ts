@@ -15,9 +15,17 @@ async function handler(
   const result: APIGatewayProxyResult = {
     statusCode: 200,
     body: 'Hello from DynamoDB',
+    headers: {
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+      'Access-Control-Allow-Methods': '*',
+    },
   };
 
-  addCorsHeader(result);
+  // addCorsHeader(result);
+
+  console.log(result);
 
   const unparsedBody = getEventBody(event);
   unparsedBody.spaceId = random();

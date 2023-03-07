@@ -9,7 +9,8 @@ export const getEventBody = (event: APIGatewayProxyEvent) =>
 export const addCorsHeader = (result: APIGatewayProxyResult) => {
   result.headers = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*', // we don t know it yet
-    'Access-Control-Allow-Methods': '*'    
+    'Access-Control-Allow-Origin': '*', // Set this to the origin domain(s) of your application
+    'Access-Control-Allow-Methods': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
   };
 }
