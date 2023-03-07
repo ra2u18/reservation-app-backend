@@ -3,7 +3,7 @@ import { DynamoDB, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 
 import { spaceSchema } from '../Shared/Model';
-import { random, getEventBody } from '../Shared/Utils';
+import { random, getEventBody, addCorsHeader } from '../Shared/Utils';
 
 const TABLE_NAME = process.env.TABLE_NAME;
 const dbClient = new DynamoDB({ region: 'eu-west-1' });
@@ -16,6 +16,8 @@ async function handler(
     statusCode: 200,
     body: 'Hello from DynamoDB',
   };
+
+  addCorsHeader(result);
 
   const unparsedBody = getEventBody(event);
   unparsedBody.spaceId = random();
@@ -36,7 +38,9 @@ async function handler(
     });
 
     await dbClient.send(command);
-    result.body = `Created item with id: ${createSpaceBody.data.spaceId}`;
+    result.body = JSON.stringify({
+      id: createSpaceBody.data.spaceId
+    });
   } catch (err) {
     if (err instanceof Error) {
       result.statusCode = 500;

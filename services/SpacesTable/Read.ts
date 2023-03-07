@@ -4,6 +4,7 @@ import {
   APIGatewayProxyResult,
   Context,
 } from 'aws-lambda';
+import { addCorsHeader } from '../Shared/Utils';
 
 import { DynamoDB, ScanCommand, ScanCommandOutput } from '@aws-sdk/client-dynamodb';
 
@@ -19,6 +20,8 @@ async function handler(
     statusCode: 200,
     body: 'Hello from DynamoDB',
   };
+  
+  addCorsHeader(result);
 
   try {
     if (!event.queryStringParameters) {
